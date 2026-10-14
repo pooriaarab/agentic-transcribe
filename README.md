@@ -1,9 +1,6 @@
 # agentic-transcribe
 
-Transcribe one audio file with timestamps.
-
-Dry run is the default. Use `--live` to call OpenAI, Deepgram, or
-AssemblyAI. Vendor errors are returned as errors.
+agentic-transcribe turns one local audio file into text with timestamps using OpenAI, Deepgram, or AssemblyAI. It provides a CLI, an MCP server, and a JavaScript API. It does not listen to a live stream.
 
 ## Install
 
@@ -13,7 +10,7 @@ npm install agentic-transcribe
 
 ## Quick start
 
-This is a dry run. It makes no network call.
+The default command is a dry run. It exits successfully and makes no network call.
 
 ```sh
 npx agentic-transcribe transcribe --file recording.mp3
@@ -23,21 +20,27 @@ npx agentic-transcribe transcribe --file recording.mp3
 {"vendor":"openai","audioFile":"recording.mp3","text":"","segments":[]}
 ```
 
-Use `--live` only when you are ready to call a vendor:
+Use `--live` only when you are ready to send the audio to a vendor.
 
-```sh
-OPENAI_API_KEY=... npx agentic-transcribe transcribe --file recording.mp3 --live
-```
+## Vendors
 
-## Three uses
+| Brand | Environment key | Live command |
+| --- | --- | --- |
+| OpenAI | `OPENAI_API_KEY` | `OPENAI_API_KEY=... npx agentic-transcribe transcribe --file recording.mp3 --vendor openai --live` |
+| Deepgram | `DEEPGRAM_API_KEY` | `DEEPGRAM_API_KEY=... npx agentic-transcribe transcribe --file recording.mp3 --vendor deepgram --live` |
+| AssemblyAI | `ASSEMBLYAI_API_KEY` | `ASSEMBLYAI_API_KEY=... npx agentic-transcribe transcribe --file recording.mp3 --vendor assemblyai --live` |
 
-### CLI
+Each live adapter calls its vendor's HTTPS API. Vendor errors are returned as errors.
+
+## CLI
 
 ```sh
 agentic-transcribe transcribe --file recording.mp3 --vendor deepgram
 ```
 
-### Library
+Add `--live` to make a vendor request. Without it, the command is a dry run.
+
+## Library
 
 ```js
 import { transcribeAudio } from "agentic-transcribe";
@@ -45,20 +48,15 @@ import { transcribeAudio } from "agentic-transcribe";
 const transcript = await transcribeAudio("recording.mp3");
 ```
 
-### MCP
+Pass `{ dryRun: false, vendor: "openai" }` for a live request.
+
+## MCP
 
 ```sh
 agentic-transcribe mcp
 ```
 
-Call `transcribe_audio` with `audioFile`, optional `vendor`, and optional
-`live`. The returned JSON shape is the same in every interface.
-
-## Vendors
-
-- OpenAI: `OPENAI_API_KEY`
-- Deepgram: `DEEPGRAM_API_KEY`
-- AssemblyAI: `ASSEMBLYAI_API_KEY`
+Call `transcribe_audio` with `audioFile`, optional `vendor`, and optional `live`. All interfaces return the same transcript JSON shape.
 
 The package runs on Node 18 or newer.
 
