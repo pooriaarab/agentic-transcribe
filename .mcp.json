@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "__PACK_NAME__": {
+    "agentic-transcribe": {
       "command": "npx",
-      "args": ["-y", "__NPM_NAME__", "mcp"]
+      "args": ["-y", "agentic-transcribe", "mcp"]
     }
   }
 }

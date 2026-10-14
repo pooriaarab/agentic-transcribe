@@ -1,15 +1,5 @@
-# __PACK_NAME__
+# agentic-transcribe
 
-__PACK_DESCRIPTION__
-
-Keywords: __PACK_KEYWORDS__.
-
-- SDK: import { summarizeText, dispatchText } from "__NPM_NAME__".
-- CLI: __PACK_COMMAND__ summary --text "...".
-- MCP: run __PACK_COMMAND__ mcp, then call summarize_text.
-
-## Docs
-
-- README: https://github.com/__GITHUB_USER__/__PACK_NAME__
-- Core contract: https://github.com/__GITHUB_USER__/__PACK_NAME__/blob/main/docs/agentic-core.md
-- License: MIT
+A Node 18+ package that transcribes one audio file with timestamps through
+OpenAI, Deepgram, or AssemblyAI. It provides CLI, npm, and MCP interfaces.
+Dry run is the default.
