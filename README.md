@@ -1,12 +1,6 @@
 # agentic-transcribe
 
-[![npm version](https://img.shields.io/npm/v/agentic-transcribe)](https://www.npmjs.com/package/agentic-transcribe)
-[![Downloads/month](https://img.shields.io/npm/dm/agentic-transcribe)](https://www.npmjs.com/package/agentic-transcribe)
-[![MIT license](https://img.shields.io/npm/l/agentic-transcribe)](https://opensource.org/license/mit)
-
-[Package](https://www.npmjs.com/package/agentic-transcribe) · [Support](https://github.com/pooriaarab/agentic-transcribe/issues)
-
-agentic-transcribe is an open-source audio transcription scaffold with OpenAI, Deepgram, and AssemblyAI request paths, a JavaScript API, CLI, and Model Context Protocol (MCP) server.
+agentic-transcribe turns one local audio file into text with timestamps using OpenAI, Deepgram, or AssemblyAI. It provides a CLI, an MCP server, and a JavaScript API. It does not listen to a live stream.
 
 ## Install
 
@@ -14,65 +8,58 @@ agentic-transcribe is an open-source audio transcription scaffold with OpenAI, D
 npm install agentic-transcribe
 ```
 
-Use Node.js 18 or later. TypeScript declarations are included. The package has two direct runtime dependencies.
+## Quick start
 
-## Preview your first request
+The default command is a dry run. It exits successfully and makes no network call.
 
 ```sh
-npx agentic-transcribe transcribe --file recording.mp3 --vendor openai
+npx agentic-transcribe transcribe --file recording.mp3
 ```
-
-Expect exit code 0 and this JSON:
 
 ```json
 {"vendor":"openai","audioFile":"recording.mp3","text":"","segments":[]}
 ```
 
-This preview requires no audio file or credentials. It performs no file read or network request.
-An empty transcript confirms preview behavior; it does not confirm transcription.
+Use `--live` only when you are ready to send the audio to a vendor.
 
-```js
-import { transcribeAudio } from 'agentic-transcribe';
-console.log(await transcribeAudio('recording.mp3', { vendor: 'deepgram' }));
+## Vendors
+
+| Brand | Environment key | Live command |
+| --- | --- | --- |
+| OpenAI | `OPENAI_API_KEY` | `OPENAI_API_KEY=... npx agentic-transcribe transcribe --file recording.mp3 --vendor openai --live` |
+| Deepgram | `DEEPGRAM_API_KEY` | `DEEPGRAM_API_KEY=... npx agentic-transcribe transcribe --file recording.mp3 --vendor deepgram --live` |
+| AssemblyAI | `ASSEMBLYAI_API_KEY` | `ASSEMBLYAI_API_KEY=... npx agentic-transcribe transcribe --file recording.mp3 --vendor assemblyai --live` |
+
+Each live adapter calls its vendor's HTTPS API. Vendor errors are returned as errors.
+
+## CLI
+
+```sh
+agentic-transcribe transcribe --file recording.mp3 --vendor deepgram
 ```
 
-## Features and coverage
+Add `--live` to make a vendor request. Without it, the command is a dry run.
 
-- **Preview:** Return the transcript shape without vendor calls; dry run is the default across all interfaces.
-- **Response mapping:** Map vendor response text and timestamp fields to `text` and `segments`.
-- **Errors:** Expose missing API keys, network failures, HTTP failures, and invalid JSON.
+## Library
 
-Three vendor paths exist. All are scaffolds; none provides verified local-file transcription.
+```js
+import { transcribeAudio } from "agentic-transcribe";
 
-| Integration | Status | Live-path environment key | Current limit |
-| --- | --- | --- | --- |
-| OpenAI | scaffold | `OPENAI_API_KEY` | Sends an empty file Blob; never reads local audio |
-| Deepgram | scaffold | `DEEPGRAM_API_KEY` | Sends an empty byte array; never reads local audio |
-| AssemblyAI | scaffold | `ASSEMBLYAI_API_KEY` | Sends the input as `audio_url`; has no upload or job polling |
+const transcript = await transcribeAudio("recording.mp3");
+```
 
-Tests use mocked responses. This campaign performs zero live credential checks.
-The OpenAI path hardcodes `gpt-4o-transcribe` and `verbose_json`; request compatibility is unverified.
+Pass `{ dryRun: false, vendor: "openai" }` for a live request.
 
-## Runtime surfaces and limits
+## MCP
 
-CLI operations are `transcribe`, `mcp`, `--help`/`-h`, and `--version`/`-V`.
-`--file` names the input; `--vendor` selects a path. `--live` enables the incomplete vendor request.
-CLI usage errors exit 2; other errors exit 1.
+```sh
+agentic-transcribe mcp
+```
 
-Start stdio MCP with `npx agentic-transcribe-mcp` or `npx agentic-transcribe mcp`.
-The single tool, `transcribe_audio`, accepts `audioFile`, optional `vendor`, and optional `live`.
-The SDK enables vendor calls only with `dryRun: false`. It accepts `apiKey` and `fetchFn` overrides.
+Call `transcribe_audio` with `audioFile`, optional `vendor`, and optional `live`. All interfaces return the same transcript JSON shape.
 
-Export the matching key before a live request. The package does not load `.env` files.
-It has no file upload implementation, automatic retries, timeout setting, streaming, or background job polling.
-The repository Worker handler exposes preview-only `POST /transcribe`; it is not a managed service.
-
-## Status and links
-
-Version 0.1.1 is an early scaffold. APIs can change before 1.0.
-Use [GitHub issues](https://github.com/pooriaarab/agentic-transcribe/issues) for support.
-No public documentation site is configured. Public case studies are not yet published.
+The package runs on Node 18 or newer.
 
 ## License
 
-MIT.
+MIT
