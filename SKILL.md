@@ -1,35 +1,12 @@
----
-name: __PACK_NAME__
-description: __PACK_DESCRIPTION__ Keywords: __PACK_KEYWORDS__.
----
+# agentic-transcribe
 
-# __PACK_NAME__
+Use this pack to preview or transcribe one audio file with timestamps.
 
-__PACK_DESCRIPTION__
-
-## Use the SDK
-
-```js
-import { summarizeText, dispatchText } from "__NPM_NAME__";
-
-summarizeText("some text");
-await dispatchText("some text", { dryRun: true });
-```
-
-## Use the CLI
+Start with dry run:
 
 ```sh
-__PACK_COMMAND__ summary --text "some text"
-__PACK_COMMAND__ dispatch --text "some text" --dry-run
+agentic-transcribe transcribe --file recording.mp3
 ```
 
-## Use the MCP server
-
-Start the server with `__PACK_COMMAND__ mcp`. Call `summarize_text`
-for stats, `dispatch_text` for routes, `get_cost_report` for costs.
-
-## Rules
-
-- Preview each route with dry run first.
-- Report guard denials and adapter errors as failures.
-- Read the cost report at the end.
+Use `--live` only after choosing OpenAI, Deepgram, or AssemblyAI and
+configuring its API key.
