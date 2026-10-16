@@ -1,20 +1,17 @@
 {
   "name": "agentic-transcribe",
   "version": "0.1.2",
-  "description": "Audio transcription scaffold for OpenAI, Deepgram, and AssemblyAI with timestamp response mapping, a TypeScript API, CLI, and MCP server.",
+  "description": "Transcribe a local audio file to timestamped text with OpenAI, Deepgram, or AssemblyAI.",
   "keywords": [
     "openai",
     "deepgram",
     "assemblyai",
-    "audio-transcription",
-    "speech-to-text",
+    "audio transcription",
     "timestamps",
-    "transcript",
-    "typescript",
-    "nodejs",
+    "transcribe",
     "cli",
     "mcp",
-    "dry-run"
+    "agent"
   ],
   "license": "MIT",
   "author": "Pooria Arab",
